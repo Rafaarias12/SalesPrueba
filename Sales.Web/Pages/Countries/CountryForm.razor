@@ -1,5 +1,5 @@
-﻿@inject SweetAlertService sweetAlertService
-@inject IRepository repository
+﻿@inject IRepository repository
+@inject SweetAlertService sweetAlertService
 
 
 <NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation"></NavigationLock>
@@ -61,7 +61,9 @@
                 Title = "Confirmación",
                 Text = "¿Deseas abandonar la página y perder los cambios?",
                 Icon = SweetAlertIcon.Warning,
-                ShowCancelButton = true
+                ShowCancelButton = true,
+                CancelButtonText = "No",
+                ConfirmButtonText = "Si"
             });
 
         var confirm = !string.IsNullOrEmpty(result.Value);
