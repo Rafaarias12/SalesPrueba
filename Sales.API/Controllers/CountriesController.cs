@@ -21,13 +21,30 @@ namespace Sales.API.Controllers
             return Ok(await _context.Countries.ToListAsync());
         }
 
-
         [HttpPost]
         public async Task<ActionResult> Post (Country country)
         {
-            _context.Countries.Add(country);
-            await _context.SaveChangesAsync();
-            return Ok(country);
+            try
+            {
+                _context.Countries.Add(country);
+                await _context.SaveChangesAsync();
+                return Ok(country);
+            }
+            catch(DbUpdateException dbUpdateException)
+            {
+                if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                {
+                    return BadRequest("Ya existe un pais con el mismo nombre.");
+                }
+                else
+                {
+                    return BadRequest(dbUpdateException.InnerException.Message);
+                }
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpGet("{id:int}")]
@@ -45,9 +62,27 @@ namespace Sales.API.Controllers
         [HttpPut]
         public async Task<ActionResult> Put(Country country)
         {
-            _context.Update(country);
-            await _context.SaveChangesAsync();
-            return Ok(country);
+            try
+            {
+                _context.Update(country);
+                await _context.SaveChangesAsync();
+                return Ok(country);
+            }
+            catch (DbUpdateException dbUpdateException)
+            {
+                if (dbUpdateException.InnerException.Message.Contains("duplicate"))
+                {
+                    return BadRequest("Ya existe un pais con el mismo nombre.");
+                }
+                else
+                {
+                    return BadRequest(dbUpdateException.InnerException.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id:int}")]
